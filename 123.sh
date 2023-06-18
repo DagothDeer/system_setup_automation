@@ -85,7 +85,7 @@ select_element_of_menu_edit_dynamic_IP() {
     while (( 1 )); do
 
         case "${choise}" in
-            "1"|"1."|"1. Switch to STATIC IP configuratin"|"Switch to STATIC IP configuratin")
+            "1"|"1."|"1. Switch to STATIC IP configuration"|"Switch to STATIC IP configuration")
                 echo -e "${GREEN}Network configuration wizard running...${RESET}"
                 run_network_configuration_wizard #^ Вызов функции запуска мастера конфигурации сети
             ;;
@@ -106,7 +106,7 @@ select_element_of_menu_edit_dynamic_IP() {
 #FUNC функция вывода меню редактирования конфига с динамическим IP
 show_menu_edit_dynamic_IP_config() {
     echo 'Select of available item:'
-	echo -e "  ${CYAN}1. Switch to ${GREEN}STATIC ${CYAN}IP configuratin"
+	echo -e "  ${CYAN}1. Switch to ${GREEN}STATIC IP ${CYAN}configuration"
     echo -e "  ${RED}9. Back${RESET}"
 	
 	echo -en "Your choise: ${MAGENTA}"
