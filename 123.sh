@@ -11,9 +11,43 @@
    BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
 
+#FUNC Функция изменения адреса шлюза поумолчанию
+change_gateway_address() {
+    echo ""
+}
+
+#FUNC Функция изменения широковещательного адреса
+change_broadcast_address() {
+    echo ""
+}
+
+#FUNC Функция изменения адреса подсети
+change_network_address() {
+    echo ""
+}
+
+#FUNC Функция изменения маски подсети
+change_network_mask() {
+    echo ""
+}
+
+#FUNC Функция изменения IP адреса
+change_IP_address() {
+    echo ""
+}
+
+#FUNC Функция смены настройки сетевой карты на динамическую
+switch_to_dynamic_IP() {
+    echo ""
+}
+
 #FUNC Функция запуска мастера конфигурации сети
 run_network_configuration_wizard() {
-    echo ""
+    change_IP_address           #^ Вызов функции изменения IP адреса
+    change_network_mask         #^ Вызов функции изменения маски подсети
+    change_network_address      #^ Вызов функции изменения адреса подсети
+    change_broadcast_address    #^ Вызов функции изменения широковещательного адреса
+    change_gateway_address      #^ Вызов функции изменения адреса шлюза поумолчанию
 }
 
 #FUNC функция выбора элемента из меню редактирования конфига со статическим IP
@@ -21,30 +55,26 @@ select_element_of_menu_edit_static_IP() {
     while (( 1 )); do
 
         case "${choise}" in
-            "0"|"0."|"0. Complex setting (auto->static->IP->mask->network->)"|"Complex setting (auto->static->IP->mask->network->)")
-                echo "Input IP address (CIDR format, like 10.10.165.11):"
-                read -r ip_address
-
-                echo "Input IP mask (CIDR format, like 255.255.0.0):"
-                read -r ip_address
-
-                echo "Input IP IP mask (CIDR format, like 255.255.0.0):"
-                read -r ip_address
-
-                echo "Input network (format, like 255.255.0.0):"
-                read -r ip_address
-
-                echo "Input broadcast (format, like 255.255.0.0):"
-                read -r ip_address
-
-                echo "Input gateway (format, like 255.255.0.0):"
-                read -r ip_address
+            "1"|"1."|"1. Switch to DYNAMIC IP configuration"|"Switch to DYNAMIC IP configuration")
+                switch_to_dynamic_IP #^ Вызов функции смены настройки сетевой карты на динамическую
             ;;
-            "1"|"1."|"1. Set only IP address"|"Set only IP address")
-                echo "Input IP address (CIDR format, like 10.10.165.11):"
-                read -r ip_address
-
-                #? < /etc/network/interfaces_2 grep -E "address" | sed -r "s/\taddress/\t12345/"
+            "2"|"2."|"2. Run network configuration wizard"|"Run network configuration wizard")
+                run_network_configuration_wizard #^ Вызов функции запуска мастера конфигурации сети
+            ;;
+            "3"|"3."|"3. Change IP address"|"Change IP address")
+                change_IP_address #^ Вызов функции изменения IP адреса
+            ;;
+            "4"|"4."|"4. Change network mask"|"Change network mask")
+                change_network_mask #^ Вызов функции изменения маски подсети
+            ;;
+            "5"|"5."|"5. Change network address"|"Change network address")
+                change_network_address #^ Вызов функции изменения адреса подсети
+            ;;
+            "6"|"6."|"6. Change broadcast address"|"Change broadcast address")
+                change_broadcast_address #^ Вызов функции изменения широковещательного адреса
+            ;;
+            "7"|"7."|"7. Change gateway address"|"Change gateway address")
+                change_gateway_address #^ Вызов функции изменения адреса шлюза поумолчанию
             ;;
             "9"|"9. Back"|"9."|"Back"|"back")
                 show_network_card_menu #^ Вызов функции вывода меню выбора сетевых карт
@@ -64,13 +94,13 @@ select_element_of_menu_edit_static_IP() {
 show_menu_edit_static_IP_config() {
     echo 'Select of available item:'
 	echo -e "  ${CYAN}1. Switch to ${GREEN}DYNAMIC${CYAN} IP configuration"
-	echo -e "  2. Set only IP address"
-	echo -e "  3. Set only IP mask"
-    echo -e "  4. Set only network"
-    echo -e "  5. Set only broadcast"
-    echo -e "  6. Set only gateway"
-	echo -e "  7. Run network configuration wizard"
-    echo -e "  8. ..."
+	echo -e "  2. Run network configuration wizard"
+    echo -e "  3. Change IP address"
+	echo -e "  4. Change network mask"
+    echo -e "  5. Change network address"
+    echo -e "  6. Change broadcast address"
+    echo -e "  7. Change gateway address"
+    echo -e "  ..."
     echo -e "  ${RED}9. Back${RESET}"
 	
 	echo -en "Your choise: ${MAGENTA}"
@@ -248,7 +278,7 @@ show_netwok_setup_menu() {
 	echo -e "  ${CYAN}1. Network cards"
 	echo -e "  2. Disable IPv6"
 	echo -e "  3. Test ping"
-	echo -e "  4. ...${RESET}"
+	echo -e "  ...${RESET}"
     echo -e "  ${RED}9. Back${RESET}"
 	
 	echo -en "Your choise: ${MAGENTA}"
@@ -307,9 +337,7 @@ run_network_setup() {
 show_setup_menu() {
     echo 'Select configuring component:'
 	echo -e "  ${CYAN}1. Network"
-	echo -e "  2. ..."
-	echo -e "  3. ..."
-	echo -e "  4. ...${RESET}"
+	echo -e "  ...${RESET}"
     echo -e "  ${RED}9. Back${RESET}"
 	
 	echo -en "Your choise: ${MAGENTA}"
@@ -443,8 +471,7 @@ show_main_menu() {
 	echo 'Select next action:'
 	echo -e "  ${CYAN}1. Get system INFO"
 	echo -e "  2. Basic system setup"
-	echo -e "  3. ..."
-	echo -e "  4. ...${RESET}"
+	echo -e "  ...${RESET}"
     echo -e "  ${RED}9. Exit${RESET}"
 	
 	echo -en "Your action: ${MAGENTA}"
