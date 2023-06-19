@@ -11,7 +11,7 @@
    BLUE='\033[0;34m'
 MAGENTA='\033[0;35m'
 
-#FUNC Функция изменения адреса шлюза поумолчанию
+#FUNC Функция изменения адреса шлюза по умолчанию
 change_gateway_address() {
     echo ""
 }
@@ -38,7 +38,26 @@ change_IP_address() {
 
 #FUNC Функция смены настройки сетевой карты на динамическую
 switch_to_dynamic_IP() {
-    echo ""
+    # Номер строки, начиная с которой (включительно) начинаем удалять конфиг сетевой карты
+    local first_deleting_string_number=$(( "${first_string_number}"+2 ))
+    # Номер строки, вплоть до которой (включительно) будет удален конфиг сетевой карты
+    local last_deleting_string_number=$(( "${first_string_number}" + "${#array_of_previous_card_config[@]}" - 1 ))
+    
+    # Перебираем строки в обратном порядке, т.к. после каждого удаления нумерация строк
+    # начиная с удаленной смещается на -1
+    for ((i="${last_deleting_string_number}";i>="${first_deleting_string_number}";i--)); do
+        # Ключ "-i" (--in-place) - результат выполнения sed пишется сразу с файл, а не на экран, т.е. редактирует на месте
+        # "$i d" - удаляет строку с номером "$i"
+        sed -i "$i d" ${path_to_network_config}
+    done
+    
+    sync # Принудительно сбрасываем все изменения файловой системы из ОЗУ на диск
+    
+    # "$first_deleting_string_number i" - вставляет текстовую строку ПЕРЕД строчкой номер $first_deleting_string_number
+    # "iface $selected_network_card inet dynamic" - сама текстовая строчка, содержащая имя сетевой карты
+    sed -i "$first_deleting_string_number i""iface $selected_network_card inet dynamic" ${path_to_network_config}
+
+    sync # Принудительно сбрасываем все изменения файловой системы из ОЗУ на диск
 }
 
 #FUNC Функция запуска мастера конфигурации сети
